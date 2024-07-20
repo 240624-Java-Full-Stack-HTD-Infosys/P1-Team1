@@ -117,4 +117,22 @@ public class ControllerREST {
         return ResponseEntity.status(200).body("Successfully unfollowed.");
     }
 
+    @GetMapping("/profile/{userID}")
+    public ResponseEntity<?> getProfile(@PathVariable int userID){
+        User user = userService.getUser(userID);
+        if(user == null){
+            return ResponseEntity.status(400).body("User not found");
+        }
+        return ResponseEntity.ok(user);
+    }
+
+    @PatchMapping("/profile/{userID}")
+    public ResponseEntity<?> updateBio(@PathVariable int userID, @RequestBody String bio){
+        if(userService.getUser(userID) == null){
+            return ResponseEntity.status(400).body("User not found cannot update post");
+        }
+
+        userService.updateBio(userID,bio);
+        return ResponseEntity.ok("update successfully");
+    }
 }
