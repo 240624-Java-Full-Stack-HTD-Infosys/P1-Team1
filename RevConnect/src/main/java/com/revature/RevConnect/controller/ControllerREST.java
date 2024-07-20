@@ -126,6 +126,7 @@ public class ControllerREST {
         return ResponseEntity.ok(user);
     }
 
+    //Json does not work have to use text format
     @PatchMapping("/profile/{userID}")
     public ResponseEntity<?> updateBio(@PathVariable int userID, @RequestBody String bio){
         if(userService.getUser(userID) == null){
