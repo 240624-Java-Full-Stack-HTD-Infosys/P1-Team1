@@ -1,6 +1,7 @@
 package com.revature.RevConnect.models;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "Follows")
@@ -14,11 +15,13 @@ public class Follow {
     // The ID of the user who is following
     @ManyToOne
     @JoinColumn(name = "FOLLOWER_ID", referencedColumnName = "USER_ID")
+    @JsonBackReference
     private User follower;
 
     // The ID of the user being followed
     @ManyToOne
     @JoinColumn(name = "FOLLOWING_ID", referencedColumnName = "USER_ID")
+    @JsonBackReference
     private User following;
 
     public Follow() {}
