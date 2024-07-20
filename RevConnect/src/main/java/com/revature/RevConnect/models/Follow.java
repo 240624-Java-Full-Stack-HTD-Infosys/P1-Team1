@@ -9,44 +9,46 @@ public class Follow {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "FOLLOW_ID")
-    private int followID;
+    private Integer followID;
 
     // The ID of the user who is following
-    @Column(name = "FOLLOWER_ID")
-    private int followerID;
+    @ManyToOne
+    @JoinColumn(name = "FOLLOWER_ID", referencedColumnName = "USER_ID")
+    private User follower;
 
     // The ID of the user being followed
-    @Column(name = "FOLLOWING_ID")
-    private int followingID;
+    @ManyToOne
+    @JoinColumn(name = "FOLLOWING_ID", referencedColumnName = "USER_ID")
+    private User following;
 
     public Follow() {}
 
-    public Follow(int followerID, int followingID) {
-        this.followerID = followerID;
-        this.followingID = followingID;
+    public Follow(User follower, User following) {
+        this.follower = follower;
+        this.following = following;
     }
 
-    public int getFollowID() {
+    public Integer getFollowID() {
         return followID;
     }
 
-    public void setFollowID(int followID) {
+    public void setFollowID(Integer followID) {
         this.followID = followID;
     }
 
-    public int getFollowerID() {
-        return followerID;
+    public User getFollower() {
+        return follower;
     }
 
-    public void setFollowerID(int followerID) {
-        this.followerID = followerID;
+    public void setFollower(User follower) {
+        this.follower = follower;
     }
 
-    public int getFollowingID() {
-        return followingID;
+    public User getFollowing() {
+        return following;
     }
 
-    public void setFollowingID(int followingID) {
-        this.followingID = followingID;
+    public void setFollowing(User following) {
+        this.following = following;
     }
 }
