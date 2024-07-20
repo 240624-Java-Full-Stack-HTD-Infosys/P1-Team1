@@ -3,21 +3,13 @@ package com.revature.RevConnect.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.revature.RevConnect.models.Comment;
-import com.revature.RevConnect.models.Follow;
-import com.revature.RevConnect.models.Post;
-import com.revature.RevConnect.models.Like;
-import com.revature.RevConnect.models.User;
-import com.revature.RevConnect.service.CommentService;
-import com.revature.RevConnect.service.FollowService;
-import com.revature.RevConnect.service.LikeService;
-import com.revature.RevConnect.service.PostService;
-import com.revature.RevConnect.service.UserService;
+import com.revature.RevConnect.models.*;
+import com.revature.RevConnect.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -37,6 +29,9 @@ public class ControllerREST {
 
     @Autowired
     FollowService followService;
+
+    @Autowired
+    MessageService messageService;
 
     @GetMapping("/ping")
     public String ping() {
@@ -149,5 +144,37 @@ public class ControllerREST {
     public ResponseEntity<String> unfollow(@RequestParam int followerID, @RequestParam int followingID) {
         followService.unfollow(followerID, followingID);
         return ResponseEntity.status(200).body("Successfully unfollowed.");
+    }
+
+    @PostMapping("/message")
+    public ResponseEntity<String> sendMessage(@RequestBody Message message) {
+        message.setTimestamp(LocalDateTime.now());
+        messageService.addMessage(message);
+        return ResponseEntity.status(200).body("Message sent.");
+    }
+
+    @GetMapping("/messages")
+    public ResponseEntity<List<Message>> getAllMessages() {
+        List<Message> messages = messageService.findAllMessages();
+        return ResponseEntity.status(200).body(messages);
+    }
+
+    @GetMapping("/messages/sender/{senderID}")
+    public ResponseEntity<List<Message>> getMessagesBySender(@PathVariable int senderID) {
+        User sender = userService.getUser(senderID);
+        if (sender != null) {
+            List<Message> messages = messageService.findBySender(sender);
+            return ResponseEntity.status(200).body(messages);
+        }
+        return ResponseEntity.status(404).body(null);
+    }
+
+    @DeleteMapping("/message/{messageID}")
+    public ResponseEntity<String> deleteMessage(@PathVariable Long messageID) {
+        if (messageService.existsById(messageID)) {
+            messageService.deleteMessage(messageID);
+            return ResponseEntity.status(200).body("Message deleted.");
+        }
+        return ResponseEntity.status(404).body("Message not found.");
     }
 }
