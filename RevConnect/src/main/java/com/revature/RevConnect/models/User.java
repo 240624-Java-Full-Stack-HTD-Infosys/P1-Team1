@@ -1,6 +1,7 @@
 package com.revature.RevConnect.models;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,16 @@ public class User {
     //authentication TODO: encrypt
     @Column(name="PASSWORD")
     String password;
+
+    // Relationship with Follow entity (followers)
+    @OneToMany(mappedBy = "following")
+    @JsonManagedReference
+    private List<Follow> followers;
+
+    // Relationship with Follow entity (followings)
+    @OneToMany(mappedBy = "follower")
+    @JsonManagedReference
+    private List<Follow> followings;
 
     public int getUserID() {
         return userID;
@@ -82,4 +93,19 @@ public class User {
         this.password = password;
     }
 
+    public List<Follow> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(List<Follow> followers) {
+        this.followers = followers;
+    }
+
+    public List<Follow> getFollowings() {
+        return followings;
+    }
+
+    public void setFollowings(List<Follow> followings) {
+        this.followings = followings;
+    }
 }
