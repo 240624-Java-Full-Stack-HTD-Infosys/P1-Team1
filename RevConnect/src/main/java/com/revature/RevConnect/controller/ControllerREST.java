@@ -16,6 +16,8 @@ import com.revature.RevConnect.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -115,25 +117,31 @@ public class ControllerREST {
 
     @PostMapping("/follow")
     public ResponseEntity<String> addFollow(@RequestBody Follow follow) {
-        followService.addFollow(follow);
-        return ResponseEntity.status(200).body("Successfully followed.");
+        User follower = userService.getUser(follow.getFollower().getUserID());
+        User following = userService.getUser(follow.getFollowing().getUserID());
+
+        if (follower != null && following != null) {
+            followService.addFollow(follower.getUserID(), following.getUserID());
+            return ResponseEntity.status(200).body("Successfully followed.");
+        }
+        return ResponseEntity.status(404).body("User not found.");
     }
 
     @GetMapping("/follows/follower/{followerID}")
     public ResponseEntity<List<Follow>> getFollowsByFollowerID(@PathVariable int followerID) {
-        List<Follow> follows = followService.findByFollowerID(followerID);
+        List<Follow> follows = followService.findByFollower(followerID);
         return ResponseEntity.status(200).body(follows);
     }
 
     @GetMapping("/follows/following/{followingID}")
     public ResponseEntity<List<Follow>> getFollowsByFollowingID(@PathVariable int followingID) {
-        List<Follow> follows = followService.findByFollowingID(followingID);
+        List<Follow> follows = followService.findByFollowing(followingID);
         return ResponseEntity.status(200).body(follows);
     }
 
     @GetMapping("/follows/check")
     public ResponseEntity<Boolean> isFollowerIDFollowingFollowingID(@RequestParam int followerID, @RequestParam int followingID) {
-        boolean isFollowing = followService.existsByFollowerIDAndFollowingID(followerID, followingID);
+        boolean isFollowing = followService.existsByFollowerAndFollowing(followerID, followingID);
         return ResponseEntity.status(200).body(isFollowing);
     }
 
