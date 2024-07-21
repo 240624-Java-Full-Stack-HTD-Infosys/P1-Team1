@@ -19,4 +19,7 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 
     // Delete a message by its ID
     void deleteById(Long messageID);
+
+    // Find messages between two users ordered by timestamp
+    List<Message> findBySenderAndReceiverOrderByTimestampAsc(User sender, User receiver);
 }

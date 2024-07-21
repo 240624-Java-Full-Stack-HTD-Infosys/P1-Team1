@@ -38,4 +38,9 @@ public class MessageService {
     public void deleteMessage(Long messageID) {
         messageRepository.deleteById(messageID);
     }
+
+    // Find messages between two users
+    public List<Message> findMessagesBetweenUsers(User sender, User receiver) {
+        return messageRepository.findBySenderAndReceiverOrderByTimestampAsc(sender, receiver);
+    }
 }

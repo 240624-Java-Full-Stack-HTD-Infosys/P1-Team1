@@ -177,4 +177,16 @@ public class ControllerREST {
         }
         return ResponseEntity.status(404).body("Message not found.");
     }
+
+    @GetMapping("/messages/{senderID}/{receiverID}")
+    public ResponseEntity<List<Message>> getMessagesBetweenUsers(@PathVariable int senderID, @PathVariable int receiverID) {
+        User sender = userService.getUser(senderID);
+        User receiver = userService.getUser(receiverID);
+        if (sender != null && receiver != null) {
+            List<Message> messages = messageService.findMessagesBetweenUsers(sender, receiver);
+            return ResponseEntity.status(200).body(messages);
+        }
+        return ResponseEntity.status(404).body(null);
+    }
+
 }
