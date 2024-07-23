@@ -210,7 +210,7 @@ public class ControllerREST {
         //Get token
         int userID = tokenService.returnAuthID(token);
 
-        System.out.println(userID);git push
+        System.out.println(userID);
 
         //Using the ID, get the user associated with it
         User u = userService.getUser(userID);
