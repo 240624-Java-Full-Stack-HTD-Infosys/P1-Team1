@@ -1,10 +1,22 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
+import likeButton from './likeButton.png';
+import commentButton from './commentButton.png';
+import './PostFeed.css';
+import 'bootstrap/dist/css/bootstrap.css';
 
+interface comment {
+    commentID: number;
+    author: string;
+    comment: string;
+}
 interface Post {
     postID: number;
-    userID: number;
     post: string;
+    author: string;
+    likes: number;
+    comments: Array<comment>;
 }
 
 function GetPostsForFeed(){
@@ -17,22 +29,47 @@ function GetPostsForFeed(){
         setPost(postList);
     }
 
-    
-    
+    async function addLike(postID: number) {
 
+    }
 
+    async function addComment(postID: number) {
+
+    }
 
 return (
     <div>
-        <h2>User Posts</h2>
-        <ul>
-            {posts.map(post => (
-                <li key={post.postID}>
-                    <p>{post.post}</p>
-                </li>
-            ))}
-        </ul>
-        <button onClick={feedRefresh}>Refresh Feed</button>
+        <div className="App">
+            <h2>Feed Posts</h2>
+        </div>
+        {posts.map(post => (
+            <div className="container">
+                <div className="row">
+                    <div className="">
+                        <div className="post-content">
+                            <div className="post-detail">
+                                <div className="user-info">
+                                    <h5>{ post.author }</h5>
+                                </div>
+                                <div className="line-divider">
+                                </div>
+                                <div className="post-text">
+                                        <p> - "{post.post}" <i className="em em-anguished"></i> <i className="em em-anguished"></i> <i className="em em-anguished"></i></p>
+                                </div>
+                                <div className="reaction">
+                                        <button onClick={() => addLike(post.postID)}> <img width="25" height="25" src={likeButton} alt="LIKE" /> </button> <button onClick={() => addComment(post.postID)}> <img width="25" height="25" src={commentButton} alt="LIKE" /> </button> <input id="commentForm" />
+                                        <p>{ post.likes } likes</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        ))}
+
+        <div className="App">
+            <button onClick={feedRefresh}>Refresh Feed</button>
+        </div>
     </div>
 );
 }
